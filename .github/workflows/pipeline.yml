@@ -30,3 +30,14 @@ jobs:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
           curl "$deploy_url"
+    tag_release:
+      needs: [deployment_pipeline]
+      runs-on: ubuntu-20.04
+      steps:
+        - name: Bump Version and Push Tag
+          if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+          uses: anothrNick/github-tag-action@1.71.0
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            DEFAULT_BUMP: 'patch'
+            DRY_RUN: true
