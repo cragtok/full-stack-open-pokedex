@@ -1,6 +1,4 @@
-name: "Lint"
-
-if: ${{ github.event_name == 'push' }}
+name: "Deployment Pipeline"
 
 on:
   push:
