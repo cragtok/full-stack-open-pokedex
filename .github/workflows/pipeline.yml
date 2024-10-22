@@ -12,7 +12,6 @@ on:
 
 jobs:
   deployment_pipeline:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +27,7 @@ jobs:
       - name: Test
         run: npm run test
       - name: Deploy
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && ${{ github.event_name == 'push' }}
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
