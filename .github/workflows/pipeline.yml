@@ -1,6 +1,4 @@
-name: "Lint"
-
-if: ${{ github.event_name == 'push' }}
+name: "Deployment Pipeline"
 
 on:
   push:
@@ -27,7 +25,7 @@ jobs:
       - name: Test
         run: npm run test
       - name: Deploy
-        if: github.ref == 'refs/heads/main' && ${{ github.event_name == 'push' }}
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
