@@ -52,13 +52,13 @@ jobs:
         with:
           title: Test Succeeded!
           message: Success! 
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
         if: ${{ success() }}
       - name: Error notification
         uses: stegzilla/discord-notify@v4
         with:
           title: Build failed!
-          message: Error! 
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          message: Error!
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
         if: ${{ failure() }}
 
