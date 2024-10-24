@@ -16,15 +16,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install Dependencies
+      - name: install dependencies
         run: npm install
-      - name: Lint
+      - name: lint
         run: npm run eslint
-      - name: Build
+      - name: build
         run: npm run build
-      - name: Test
+      - name: test
         run: npm run test
-      - name: Deploy
+      - name: deploy
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
           IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
