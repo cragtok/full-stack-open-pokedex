@@ -1,11 +1,11 @@
-name: Testing stuff
+name: Testing stuff workflow
 
 on:
   push:
     branches:
       - pr
     pull_request:
-      branches: [main]
+      branches: [pr]
       types: [opened, synchronize]
 
 jobs:
