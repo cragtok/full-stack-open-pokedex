@@ -37,12 +37,12 @@ jobs:
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v4
       - name: Bump Version and Push Tag
         uses: anothrNick/github-tag-action@1.71.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: 'patch'
-          DRY_RUN: true
           IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
           IS_PUSH: ${{ github.event_name == 'push' }}
           CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
