@@ -47,3 +47,18 @@ jobs:
           IS_PUSH: ${{ github.event_name == 'push' }}
           CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
         if: ${{ env.CONTAINS_SKIP == 'false' && env.IS_MAIN && env.IS_PUSH }}
+      - name: Success notification
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        with:
+          severity: info
+          description: Test Succeeded!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+        if: ${{ success() }}
+      - name: Error notification
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        with:
+          severity: error
+          description: Build failed!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+        if: ${{ failure() }}
+
