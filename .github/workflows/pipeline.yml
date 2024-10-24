@@ -48,17 +48,17 @@ jobs:
           CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
         if: ${{ env.CONTAINS_SKIP == 'false' && env.IS_MAIN && env.IS_PUSH }}
       - name: Success notification
-        uses: rjstone/discord-webhook-notify@v1.0.4
+        uses: stegzilla/discord-notify@v4
         with:
-          severity: info
-          description: Test Succeeded!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Test Succeeded!
+          message: Success! 
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
         if: ${{ success() }}
       - name: Error notification
-        uses: rjstone/discord-webhook-notify@v1.0.4
+        uses: stegzilla/discord-notify@v4
         with:
-          severity: error
-          description: Build failed!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Build failed!
+          message: Error!
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
         if: ${{ failure() }}
 
