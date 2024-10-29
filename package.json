@@ -7,7 +7,7 @@
     "start": "NODE_ENV=development webpack-dev-server --open --mode development",
     "start-prod": "NODE_ENV=production node app.mjs",
     "test": "jest",
-    "eslint": "eslint './**/*.{js,jsx}'",
+    "eslint": "eslint './**/*.{js,jsx,mjs}'",
     "build": "webpack --mode production",
     "cypress:open": "cypress open",
     "start:test": "NODE_ENV=test node app.mjs",
