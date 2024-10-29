@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: npm install
+      - name: install
         run: npm install
       - name: lint
         run: npm run eslint
@@ -27,3 +27,5 @@ jobs:
           command: npm run test:e2e
           start: npm run start:test
           wait-on: http://localhost:5000
+      - name: deploy
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
