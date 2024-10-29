@@ -34,9 +34,9 @@ jobs:
         env:
           IS_PUSH: ${{ github.event_name == 'push' }}
           CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
-          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
         if: ${{ env.IS_PUSH && env.CONTAINS_SKIP == 'false' }}
-        run: curl ${{ env.DEPLOY_HOOK }}
+        run: curl ${{ env.RENDER_DEPLOY_HOOK }}
   tag_release:
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
