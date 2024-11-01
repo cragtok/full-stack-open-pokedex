@@ -55,7 +55,7 @@ jobs:
 
 
   tag_release:
-    needs: [deployment_pipeline]
+    needs: [deployment_pipeline_prod]
     runs-on: ubuntu-20.04
     if: ${{ needs.steps.deploy_step.outcome == 'success' }}
     steps:
