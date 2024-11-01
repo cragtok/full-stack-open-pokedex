@@ -40,7 +40,7 @@ jobs:
         uses: stegzilla/discord-notify@v4
         with:
           title: A new version of Pokedex has been deployed!
-          message: "**User:** ${{ github.actor }}\n**Link:** https://shorturl.at/7rirS\n**Commit**: https://github.com/${{ github.actor }}/full-stack-open-pokedex/commit/${{ github.event.commit.url }}"
+          message: "**User:** ${{ github.actor }}\n**Link:** https://shorturl.at/Ls310\n**Commit**: https://github.com/${{ github.actor }}/full-stack-open-pokedex/commit/${{ github.event.commit.url }}"
           colour: "#a5db5e"
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
         if: ${{ success() }}
