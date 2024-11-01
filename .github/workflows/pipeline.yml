@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: fail
+        run: exit 1
       - name: install
         run: npm install
       - name: lint
@@ -50,6 +52,14 @@ jobs:
           colour: "#a5db5e"
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
         if: ${{ needs.deployment_pipeline.result == 'success' }}
+      - name: Error notification
+        uses: stegzilla/discord-notify@v4
+        with:
+          title: New Pokedex build failed!
+          message: "**User:** ${{ github.actor }}\n**Commit**: https://github.com/${{ github.actor }}/full-stack-open-pokedex/commit/${{ github.event.commit.url }}"
+          colour: "#d93d3f"
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+        if: ${{ needs.deployment_pipeline.result == 'failure' }}
 
   tag_release:
     needs: [deployment_pipeline]
