@@ -43,7 +43,7 @@ jobs:
   discord_notifications:
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
-    if: ${{ always() && github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    if: ${{ always() }}
     steps:
       - name: Success notification
         uses: stegzilla/discord-notify@v4
