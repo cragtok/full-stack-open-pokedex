@@ -43,6 +43,7 @@ jobs:
   discord_notifications:
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
+    if: ${{ always() }}
     steps:
       - name: Success notification
         uses: stegzilla/discord-notify@v4
