@@ -28,6 +28,7 @@ jobs:
           start: npm run start:test
           wait-on: http://localhost:5000
       - name: deploy
+        id: deploy_step
         env:
           IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
           IS_PUSH: ${{ github.event_name == 'push' }}
@@ -52,9 +53,11 @@ jobs:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
         if: ${{ failure() }}
 
+
   tag_release:
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
+    if: ${{ needs.steps.deploy_step.outcome == 'success' }}
     steps:
       - uses: actions/checkout@v4
       - name: Bump Version and Push Tag
