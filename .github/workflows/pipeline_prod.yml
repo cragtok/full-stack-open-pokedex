@@ -13,8 +13,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: fail
-        run: exit 1
       - name: install
         run: npm install
       - name: lint
