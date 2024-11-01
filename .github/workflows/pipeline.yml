@@ -65,6 +65,7 @@ jobs:
   tag_release:
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
+    if: ${{ steps.deploy_step.outcome == 'success' }}
     steps:
       - uses: actions/checkout@v4
       - name: Bump Version and Push Tag
@@ -72,7 +73,3 @@ jobs:
         env:
           DEFAULT_BUMP: 'patch'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
-          IS_PUSH: ${{ github.event_name == 'push' }}
-          IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
-        if: ${{ env.CONTAINS_SKIP == 'false' && env.IS_MAIN && env.IS_PUSH }}
