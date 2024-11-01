@@ -16,8 +16,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: fail
-        run: exit 1
       - name: install
         run: npm install
       - name: lint
@@ -43,7 +41,7 @@ jobs:
   discord_notifications:
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
-    if: ${{ always() }}
+    if: ${{ always() && github.ref == 'refs/heads/main' }}
     steps:
       - name: Success notification
         uses: stegzilla/discord-notify@v4
