@@ -16,8 +16,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: fail
-        run: exit 1
       - name: install
         run: npm install
       - name: lint
@@ -33,17 +31,19 @@ jobs:
           start: npm run start:test
           wait-on: http://localhost:5000
       - name: deploy
+        id: deploy_step
         env:
           IS_PUSH: ${{ github.event_name == 'push' }}
+          IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
           CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
-        if: ${{ env.IS_PUSH && env.CONTAINS_SKIP == 'false' }}
+        if: ${{ success() && env.CONTAINS_SKIP == 'false' && env.IS_MAIN && env.IS_PUSH }}
         run: curl ${{ env.RENDER_DEPLOY_HOOK }}
 
   discord_notifications:
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
-    if: ${{ always() }}
+    if: ${{ always() && github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     steps:
       - name: Success notification
         uses: stegzilla/discord-notify@v4
@@ -52,7 +52,7 @@ jobs:
           message: "**User:** ${{ github.actor }}\n**Link:** https://shorturl.at/7rirS\n**Commit**: https://github.com/${{ github.actor }}/full-stack-open-pokedex/commit/${{ github.event.commit.url }}"
           colour: "#a5db5e"
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-        if: ${{ needs.deployment_pipeline.result == 'success' }}
+        if: ${{ steps.deploy_step.outcome == 'success' }}
       - name: Error notification
         uses: stegzilla/discord-notify@v4
         with:
@@ -60,7 +60,7 @@ jobs:
           message: "**User:** ${{ github.actor }}\n**Commit**: https://github.com/${{ github.actor }}/full-stack-open-pokedex/commit/${{ github.event.commit.url }}"
           colour: "#d93d3f"
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-        if: ${{ needs.deployment_pipeline.result == 'failure' }}
+        if: ${{ steps.deploy_step.outcome == 'failure' }}
 
   tag_release:
     needs: [deployment_pipeline]
@@ -74,4 +74,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
           IS_PUSH: ${{ github.event_name == 'push' }}
-        if: ${{ env.IS_PUSH && env.CONTAINS_SKIP == 'false' }}
+          IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ env.CONTAINS_SKIP == 'false' && env.IS_MAIN && env.IS_PUSH }}
