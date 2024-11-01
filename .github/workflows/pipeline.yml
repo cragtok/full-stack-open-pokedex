@@ -35,16 +35,16 @@ jobs:
         env:
           NOT_PR: ${{ github.event_name != 'pull_request' }}
           IS_PUSH: ${{ github.event_name == 'push' }}
-          IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
+          IS_NOT_PR_OPEN: ${{ github.event.action != 'opened' }}
           CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
-        if: ${{ success() && env.NOT_PR && env.CONTAINS_SKIP == 'false' && env.IS_MAIN && env.IS_PUSH }}
+        if: ${{ env.IS_NOT_PR_OPEN && env.IS_PUSH && env.CONTAINS_SKIP == 'false' }}
         run: curl ${{ env.RENDER_DEPLOY_HOOK }}
 
   discord_notifications:
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
-    if: ${{ always() }}
+    if: ${{ always() && github.ref == 'refs/heads/main' }}
     steps:
       - name: Success notification
         uses: stegzilla/discord-notify@v4
@@ -74,3 +74,7 @@ jobs:
         env:
           DEFAULT_BUMP: 'patch'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
+          IS_PUSH: ${{ github.event_name == 'push' }}
+          IS_NOT_PR_OPEN: ${{ github.event.action != 'opened' }}
+        if: ${{ env.IS_NOT_PR_OPEN && env.IS_PUSH && env.CONTAINS_SKIP == 'false' }}
