@@ -1,15 +1,12 @@
-name: "Deployment pipeline"
+name: "Deployment pipeline (prod)"
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize]
 
 jobs:
-  deployment_pipeline:
+  deployment_pipeline_prod:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -66,6 +63,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: 'patch'
           IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
-          IS_PUSH: ${{ github.event_name == 'push' }}
           CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
-        if: ${{ env.CONTAINS_SKIP == 'false' && env.IS_MAIN && env.IS_PUSH }}
+        if: ${{ env.CONTAINS_SKIP == 'false' }}
