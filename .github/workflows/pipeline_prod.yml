@@ -57,7 +57,6 @@ jobs:
   tag_release:
     needs: [deployment_pipeline_prod]
     runs-on: ubuntu-20.04
-    if: ${{ needs.steps.deploy_step.outcome == 'success' }}
     steps:
       - uses: actions/checkout@v4
       - name: Bump Version and Push Tag
@@ -65,6 +64,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: 'patch'
-          IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
           CONTAINS_SKIP: ${{ contains(join(toJson(github.event.commits.*.message)), '#skip') }}
         if: ${{ env.CONTAINS_SKIP == 'false' }}
