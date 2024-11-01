@@ -37,6 +37,22 @@ jobs:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
         if: ${{ env.IS_PUSH && env.CONTAINS_SKIP == 'false' }}
         run: curl ${{ env.RENDER_DEPLOY_HOOK }}
+      - name: Success notification
+        uses: stegzilla/discord-notify@v4
+        with:
+          title: A new version of Pokedex has been deployed!
+          message: "**User:** ${{ github.actor }}\n**Link:** https://shorturl.at/7rirS\n**Commit**: https://github.com/${{ github.actor }}/full-stack-open-pokedex/commit/${{ github.event.commit.url }}"
+          colour: "#a5db5e"
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+        if: ${{ success() }}
+      - name: Error notification
+        uses: stegzilla/discord-notify@v4
+        with:
+          title: New Pokedex build failed!
+          message: "**User:** ${{ github.actor }}\n**Commit**: https://github.com/${{ github.actor }}/full-stack-open-pokedex/commit/${{ github.event.commit.url }}"
+          colour: "#d93d3f"
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+        if: ${{ failure() }}
   tag_release:
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
