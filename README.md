@@ -13,3 +13,7 @@ Start by running `npm install` inside the project folder
 `npm run eslint` to run eslint
 `npm run build` to make a production build
 `npm run start-prod` to run your production build
+
+## Other Repository (Used for Exercises 11.21 and 11.21)
+
+https://github.com/cragtok/bloglist_ci_cd
